@@ -1,0 +1,6 @@
+id,passengerType,baggageType,riskLevel,weight
+101,VIP,Fragile,2,32
+102,Economy,Regular,0,20
+103,Business,Fragile,1,28
+104,VIP,Regular,0,24
+105,Economy,Fragile,2,18

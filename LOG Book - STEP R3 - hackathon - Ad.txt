@@ -1,0 +1,160 @@
+LOG Book - STEP R3 - hackathon - Adv DSA
+
+-personal deadline till 12 pm 4th august - completion and uploading the fiels
+Phase 1-start
+-to set up the file structure
+'''
+GlobalAir/
+│
+├── data/                    # For any datasets you use
+├── src/                     # Source code
+│   ├── graph.cpp / .h       # Flight network
+│   ├── baggage.cpp / .h     # Baggage handling
+│   ├── delays.cpp / .h      # Delay analysis
+│   ├── gate_sort.cpp / .h   # Sorting system
+│   └── dashboard.cpp / .h   # Monitoring system
+├── main.cpp                 # Entry point
+├── tests/                   # Unit tests
+├── README.md                # Project documentation
+└── design_doc.pdf/.md       # Your design submission
+'''
+-successfully created this file structure in my vscode local
+Phase 1-end
+Phase 2-start
+-getting the dataset from openflights dataset
+-airports.dat and routes.dat --downloaded
+-exploring the airports.dat file
+
+Module 1 - graph construction 
+-graph.h,graph.cpp and main file
+-*error 1* for #include graph.h  in main.cpp - maybe because it it outside of the src files
+-couldn't find the exact error - essentialy it is tno able to find the file
+-quick fix - shift the main.cpp into the src
+-*error 2* - the graph.cpp is not compiling itself - prpblewm with version of C++(written with 17 in mind i have 11)
+-chage bits of code
+Compile code (main and graph.cpp)
+'''g++ src/main.cpp src/graph.cpp -o output/globalair.exe -std=c++11'''
+running command :- 
+'''./output/globalair.exe'''
+-*error 3* replace char arrow with '->' rto rectify it
+-potential error - ~6k airports are bbeing read and ~1.5k are skipped - that may be a problem - likely parsing -- currently we are just skipping them
+- we are using adjaceny llist as - space,scalability,easier lookup,sparse problem ,less complex data structure
+-we synteicllly produced the avg delay and cost 
+Module 1 complete ----------
+==
+Module 2 - shortest path finder
+-2 DISTANCE FINDING ALGORITHMS  to implement 
+-dijistra algo with the help of heap optimla - fast and positive values - (n+m)log n
+- bellammnford slow but works even with negative values - almost n^2
+Modukle 2 complete ------
+=====
+Module 3 -  Baggage Flow System (Binary Tree + Min Heap) + the specialised use case
+
+
+tip:-
+What to Do - createa a new file for module  3
+Create a new file:
+Create main_baggage.cpp for Module 3.
+
+Use the previously given baggage.h, bst.h, heap.h files (or combine if needed).
+
+Test and validate the baggage logic completely.
+
+Later, if you really want a unified interface (like in the final report/demo), create a main.cpp with a menu:
+'''
+int choice;
+cout << "Choose Module:\n1. Flight Path Finder\n2. Baggage System\nEnter choice: ";
+cin >> choice;
+if (choice == 1) runFlightPathModule();
+else if (choice == 2) runBaggageModule();
+'''
+
+Commands to run Module 3 :
+compile - '''g++ main_baggage.cpp -o output/baggage.exe'''
+g++ main_baggage.cpp bst.cpp minheap.cpp -o ../output/baggage.exe
+
+Execute  - '''./output/baggage.exe'''
+
+EXTENSION OF MODULE 3 -  Special case
+'''g++ -std=c++11 main_baggage.cpp bst.cpp minheap.cpp weight_balancer.cpp -o ./output/baggage.exe
+'''
+
+------module 3 and extension special use case 1 satisfied-----
+=========
+MODULE 4------Lost baggage tracker
+'''g++ -std=c++11 main_lost.cpp lost_tracker.cpp -./output/lost_tracker.exe
+./output/lost_tracker.exe'''
+-================
+Module 5 - 
+'''g++ -std=c++11 main_gate.cpp gate_sort.cpp -o ./output/gate_sort.exe
+./output/gate_sort.exe
+'''
+-==============
+Module 6 - 
+'''g++ -std=c++11 main_gate.cpp gate_sort.cpp -o ./output/gate_sort.exe
+./output/gate_sort.exe
+'''
+-==============
+Module 7-
+'''g++ -std=c++11 main_dashboard.cpp dashboard.cpp -o ./output/dashboard.exe
+./output/dashboard.exe
+'''
+
+-============
+special use case 2
+
+'''g++ -std=c++11 main_route_opt.cpp graph.cpp -o ./output/main_route_opt.exe
+./output/main_route_opt.exe
+'''
+
+-===================
+directory structure
+
+GlobalAir/
+├── data/                        # All input datasets
+│   ├── airports.dat
+│   ├── routes.dat
+│   ├── delay_data.csv
+│   ├── forced_chains_delay_data.csv
+│   └── gate_flights.csv
+│
+├── src/                         # All C++ source files
+│   ├── graph.cpp / graph.h              ← Module 1, 2, 8
+│   ├── baggage.cpp / baggage.h          ← Module 3
+│   ├── bst.cpp / bst.h                  ← Module 3
+│   ├── minheap.cpp / minheap.h          ← Module 3
+│   ├── weight_balancer.cpp / .h         ← Module 3
+│   ├── lost_tracker.cpp / .h            ← Module 4
+│   ├── delays.cpp / .h                  ← Module 5
+│   ├── gate_sort.cpp / .h               ← Module 6
+│   ├── dashboard.cpp / .h               ← Module 7
+│
+│   ├── main.cpp                         ← Module 1 & 2
+│   ├── main_baggage.cpp                ← Module 3
+│   ├── main_lost.cpp                   ← Module 4
+│   ├── main_delay.cpp                  ← Module 5
+│   ├── main_gate.cpp                   ← Module 6
+│   ├── main_dashboard.cpp              ← Module 7
+│   ├── main_route_opt.cpp              ← Module 8
+│
+│   └── output/                         # All compiled .exe files
+│       ├── baggage.exe
+│       ├── lost_tracker.exe
+│       ├── delay_analysis.exe
+│       ├── gate_sort.exe
+│       ├── dashboard.exe
+│       └── main_route_opt.exe
+│
+├── README.md                   ← Project summary & instructions (to generate)
+├── design_doc.pdf              ← Architecture/design notes
+=============================================================
+All the compilation codes :- 
+
+
+g++ -std=c++11 main.cpp graph.cpp -o output/flight.exe
+g++ -std=c++11 main_baggage.cpp bst.cpp minheap.cpp weight_balancer.cpp baggage.cpp -o output/baggage.exe
+g++ -std=c++11 main_lost.cpp lost_tracker.cpp -o output/lost_tracker.exe
+g++ -std=c++11 main_delay.cpp delays.cpp -o output/delay_analysis.exe
+g++ -std=c++11 main_gate.cpp gate_sort.cpp -o output/gate_sort.exe
+g++ -std=c++11 main_dashboard.cpp dashboard.cpp -o output/dashboard.exe
+g++ -std=c++11 main_route_opt.cpp graph.cpp -o output/main_route_opt.exe

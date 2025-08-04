@@ -1,0 +1,7 @@
+flight_id,arrival_time,passenger_type,risk_level
+AI101,08:45,Economy,Medium
+BA202,08:30,VIP,High
+QR303,08:30,Business,Low
+EM404,09:15,Economy,Low
+LH505,08:30,VIP,Low
+AF606,08:45,Business,Medium

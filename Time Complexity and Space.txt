@@ -1,0 +1,558 @@
+Time Complexity and Space
+
+MODULE 1
+⏱️ Time Complexity
+1. loadAirports()
+Reads and parses n lines, each with fixed fields.
+
+Tokenization and parsing each line: O(1) per line (as number of fields per airport is fixed).
+
+✅ Time: O(n) — where n is the number of lines (airports) in airports.dat.
+
+2. loadRoutes()
+Reads and parses m lines, each representing a flight/route.
+
+For each route, looks up two airports (source and destination) in a hash map: O(1) average-case per lookup.
+
+Haversine formula is constant time: O(1).
+
+✅ Time: O(m) — where m is the number of lines (routes) in routes.dat.
+
+3. displayGraph()
+Iterates over all nodes and their adjacency lists.
+
+Let:
+
+V = number of airports with valid outgoing flights
+
+E = total number of flight routes
+
+✅ Time: O(V + E)
+
+💾 Space Complexity
+1. Airports Storage
+Stored in an unordered_map<string, Airport>: one entry per valid airport.
+
+✅ Space: O(n)
+
+2. Adjacency List
+Stored as unordered_map<string, vector<FlightEdge>>
+
+Stores all directed edges (i.e., flight routes)
+
+✅ Space: O(E)
+
+3. Total Space
+✅ O(n + E)
+
+📌 Summary
+Operation	Time Complexity	Space Complexity
+loadAirports()	O(n)	O(n)
+loadRoutes()	O(m)	O(E)
+displayGraph()	O(V + E)	—
+Total	O(n + m)	O(n + E)
+
+Where:
+
+n = number of airport records
+
+m = number of route records (E = #edges)
+
+V = number of airports with at least one outgoing flight
+
+
+========================================================================
+MODULE 2
+
+✅ Time and Space Complexity — Module 2 (Shortest Path Finder)
+🧮 1. Dijkstra's Algorithm
+✔ When implemented using a Min-Heap (priority queue):
+cpp
+Copy code
+priority_queue<pair<double, string>, vector<pair<double, string>>, greater<>> pq;
+- Time Complexity:
+Initialization: O(V)
+
+Main loop:
+
+Each vertex is pushed into the priority queue at most once → O(V)
+
+For each edge, we may update the distance and push into the heap → O(E log V)
+
+➡ Total: O((V + E) log V)
+
+Where:
+
+V = number of vertices (airports ≈ 6000)
+
+E = number of edges (routes ≈ 60,000–80,000)
+
+- Space Complexity:
+dist, parent, visited maps → O(V)
+
+Priority queue → O(V)
+
+Adjacency list → O(V + E)
+
+➡ Total: O(V + E)
+
+🧮 2. Bellman-Ford Algorithm
+✔ Bellman-Ford works for graphs with negative edge weights, unlike Dijkstra.
+- Time Complexity:
+V - 1 iterations over all edges:
+
+Inner loop: O(E)
+
+Final check for negative cycles: O(E)
+
+➡ Total: O(V × E)
+
+For large graphs, Bellman-Ford is slower, especially with 6,000 nodes and ~60,000+ edges:
+
+plaintext
+Copy code
+Estimated ~360 million operations = O(6000 × 60000)
+Hence, it takes noticeable time, as you saw in real runs.
+
+- Space Complexity:
+dist and parent maps → O(V)
+
+No heap/priority queue
+
+Adjacency list already exists → O(V + E)
+
+➡ Total: O(V + E)
+
+📌 Summary Table
+Algorithm	Time Complexity	Space Complexity	Use Case
+Dijkstra	O((V + E) log V)	O(V + E)	Fastest for non-negative weights
+Bellman-Ford	O(V × E)	O(V + E)	For negative weights (e.g., penalties)
+=======================================
+Module 3 - bagage routing
+
+✅ BaggageBST (Binary Search Tree)
+1. insert(Baggage b)
+Best / Avg Case (Balanced BST):
+⏱ Time: O(log n)
+💾 Space: O(log n) (due to recursive calls)
+
+Worst Case (Unbalanced BST):
+⏱ Time: O(n)
+💾 Space: O(n)
+
+➡️ Unbalanced BST happens if you insert sorted baggage IDs.
+
+2. printInOrder() and printCategory()
+Time: O(n) (visits every node)
+
+Space: O(h) recursion stack, where h is height of tree
+
+3. searchByCategory()
+Not indexed, so it's essentially an in-order traversal:
+⏱ Time: O(n)
+💾 Space: O(h) (recursive)
+
+✅ BaggageMinHeap (Priority Queue with Custom Comparator)
+1. push(Baggage b)
+Internally uses binary heap
+⏱ Time: O(log n)
+💾 Space: O(1) (heap grows, but each push is constant size)
+
+2. pop()
+Removes and reorders the heap
+⏱ Time: O(log n)
+💾 Space: O(1)
+
+3. empty()
+Just checks if vector is empty
+⏱ Time: O(1)
+💾 Space: O(1)
+
+✅ computeUrgency()
+Simple arithmetic operation
+⏱ Time: O(1)
+💾 Space: O(1)
+
+✅ loadBaggageFromCSV()
+Assuming n lines (excluding header):
+
+⏱ Time: O(n) (parsing each line once)
+
+💾 Space: O(n) (stores all n Baggage structs in memory)
+
+✅ main()
+Assuming n baggage records:
+
+Step	Time Complexity	Space Complexity
+Loading from CSV	O(n)	O(n)
+BST insertion	O(n log n) avg, O(n²) worst	O(n)
+Min Heap insertion	O(n log n)	O(n)
+BST traversal	O(n)	O(h)
+Heap popping	O(n log n)	O(1) each
+
+📊 Summary Table
+Component	Operation	Time Complexity	Space Complexity
+BST	Insert	O(log n) avg, O(n) worst	O(log n) recursion
+Inorder/Category	O(n)	O(h) recursion
+Min Heap	Insert	O(log n)	O(1)
+Pop	O(log n)	O(1)
+CSV Loader	Load	O(n)	O(n)
+Urgency Calc	computeUrgency	O(1)	O(1)
+
+========================================
+MOdule 3 + extesnidon special use case 1
+
+
+🧮 Module 3: Baggage Flow System
+Functionality	Time Complexity	Space Complexity	Notes
+✅ BST::insert()	O(log n) avg, O(n) worst	O(log n) recursion stack	Unbalanced BST = worst case O(n)
+✅ BST::printInOrder()	O(n)	O(h) recursion stack	h = height of BST
+✅ BST::printCategory()	O(n)	O(h)	No indexing by category
+✅ MinHeap::push()	O(log n)	O(1)	Heap maintains sorted order
+✅ MinHeap::pop()	O(log n)	O(1)	Each pop returns most urgent
+✅ computeUrgency()	O(1)	O(1)	Simple arithmetic
+
+🏋️ Specialized Use Case: Baggage Weight Balancer (Exact DP)
+📌 Problem: Split baggage into two groups with near-equal total weight
+✅ Function: balanceBaggageWeight(vector<Baggage>& bags)
+Let:
+
+n = number of baggage items
+
+S = total sum of weights
+
+T = S / 2 = target weight to reach
+
+Component	Time Complexity	Space Complexity	Notes
+Total weight calc	O(n)	O(1)	Single loop
+DP table build	O(n × T)	O(n × T)	T ≈ sum(weights)/2
+Backtracking assignments	O(n)	O(n)	Based on tracking list
+Group summation (accumulate)	O(n)	O(1)	Final total weights
+
+🔁 Example from your run:
+Total weight = 122
+
+Target = 61
+
+DP matrix size = 6 x 61
+
+→ Practically efficient ✅
+
+🧠 Summary Table
+Component	Time Complexity	Space Complexity
+Module 3 (BST + MinHeap)	O(n log n) total	O(n)
+Weight Balancer (DP)	O(n × T) where T ≈ sum/2	O(n × T)
+
+💡 Optimization Notes:
+You can reduce space in DP from O(n×T) to O(T) using 1D DP with rolling update.
+
+If T is too large, use a Greedy Approximate algorithm (O(n log n)).
+===========================
+Module 4 - track lost baggage ;-
+✅ Complexity Per Operation
+1. insert(Baggage b)
+Time: O(1)
+
+Space: O(1)
+
+Why: Append to tail of linked list + insert into hash map.
+
+2. remove(int baggageID)
+Time: O(1)
+
+Space: O(1)
+
+Why: Use hash map to find node in O(1) and unlink in constant time.
+
+3. getBaggageInfo(int baggageID)
+Time: O(1)
+
+Space: O(1)
+
+Why: Direct lookup in unordered_map.
+
+4. printFlow()
+Time: O(n)
+
+Space: O(1)
+
+Why: Linear traversal from head to tail of doubly linked list.
+
+✅ Total Storage Usage
+Let n = number of bags in transit:
+
+Component	Space Used	Reason
+Hash Table	O(n)	One entry per baggage ID
+Doubly Linked List	O(n)	One node per bag
+Total	O(n)	Combined hash map + list
+
+📊 Summary Table
+Operation	Time Complexity	Space Complexity
+insert()	O(1)	O(1)
+remove()	O(1)	O(1)
+getBaggageInfo()	O(1)	O(1)
+printFlow()	O(n)	O(1)
+Total System Storage	—	O(n)
+=========
+MODULE 5-----
+✅ Module 5 Overview
+📦 Inputs:
+n = number of records (rows in delay_data.csv)
+
+m = number of airports (typically 50–500 in real datasets)
+
+E = number of directed edges (flights with origin → destination)
+
+🧩 Part 1: Seasonal Delay Trends (Tabulation)
+🔧 Operations:
+Loading CSV:
+
+Time: O(n)
+
+Space: O(n) (stores all rows)
+
+Building monthlyDelays (airport → month → delays[]):
+
+Time: O(n) (each row appended)
+
+Space: O(m × 12 × k) where k is average delays per month-airport
+
+Computing Monthly Averages:
+
+Time: O(m × 12 × k) ≈ O(n)
+
+Space: O(m × 12) for avgDelays
+
+Top Airport Sorting for a Month:
+
+Time: O(m log m) (since sorting airport averages)
+
+Space: O(m) for result vector
+
+✅ Part 1 Summary
+Metric	Value
+⏱ Time	O(n + m log m)
+🧠 Space	O(n + m × 12)
+
+🧩 Part 2: Longest Delay Chain (Graph + DP)
+🔧 Operations:
+Build Graph:
+
+Time: O(n) (1 edge per record)
+
+Space: O(E)
+
+Memoized DFS on Graph:
+
+For each node, visits each edge once.
+
+Time: O(m + E) (classic DP on DAG)
+
+Space:
+
+memo: O(m)
+
+visiting set: O(h) where h is DFS recursion height (≤ m)
+
+findLongestDelayChain():
+
+Calls DFS for every node once
+
+Total: O(m + E) (no recomputation due to memoization)
+
+✅ Part 2 Summary
+Metric	Value
+⏱ Time	O(m + E)
+🧠 Space	O(m + E)
+
+🚀 Final Complexity (Full Module 5)
+Component	Time Complexity	Space Complexity
+Load CSV	O(n)	O(n)
+Monthly Avg	O(n)	O(m × 12)
+Sort Top Airports	O(m log m)	O(m)
+Build Graph	O(n)	O(E)
+Memoized DFS	O(m + E)	O(m + E)
+
+✅ Total Time: O(n + m log m + E)
+✅ Total Space: O(n + m × 12 + E)
+===========================
+Module 6 :-
+🔧 Module 6 Breakdown
+Let:
+n = number of flights (input size)
+
+🧠 Step-by-Step Complexity
+1. CSV File Loading (loadFlightsFromCSV)
+Time: O(n)
+
+Each line read and parsed into a Flight object
+
+Space: O(n)
+
+Stored in a vector<Flight>
+
+2. Merge Sort with Custom Comparator
+Time: O(n log n)
+
+Merge sort always divides input into halves → log n levels
+
+Merging at each level takes O(n) time
+
+Custom comparator runs in O(1) per comparison (constant work)
+
+Space: O(n)
+
+Temporary vectors for left and right halves during merge
+
+3. Comparator (compareFlights)
+Time per comparison: O(1)
+
+Time conversion: HH:MM → minutes: O(1)
+
+Priority lookups using if-else or map: O(1)
+
+Total comparisons: O(n log n)
+
+✅ Final Summary
+Operation	Time Complexity	Space Complexity
+CSV File Loading	O(n)	O(n)
+Merge Sort (custom)	O(n log n)	O(n)
+Comparator Function	O(1) per call	—
+Overall (Module 6)	O(n log n)	O(n)
+
+--===========
+
+MODULE 7 :
+🧠 Let’s define:
+r = number of route entries (e.g., origin → dest pairs)
+
+d = total number of delays per route (usually small, ≈ 3–10)
+
+c = number of flight connection pairs
+
+j = number of baggage checkpoints
+
+✅ 1. Top 5 Delay-Prone Routes
+🔧 Data Structures:
+Input: vector<pair<string, string>> of routes
+
+Delay map: unordered_map<string, vector<double>>
+
+📊 Complexity:
+Operation	Time	Space
+Look up and average delays	O(r × d)	O(r)
+Sorting top 5 by avg delay	O(r log r)	O(r)
+Total	O(r log r)	O(r)
+
+✅ 2. Top 5 Baggage Jam Points
+🔧 Data Structures:
+Input: unordered_map<string, int>
+
+📊 Complexity:
+Operation	Time	Space
+Copy into vector	O(j)	O(j)
+Sort jam counts	O(j log j)	O(j)
+Total	O(j log j)	O(j)
+
+✅ 3. Flights at Risk
+🔧 Data Structures:
+Input: vector<FlightConnection>
+
+📊 Complexity:
+Operation	Time	Space
+Convert times & compare	O(c)	O(c)
+Store filtered connections	O(c)	O(c)
+Total	O(c)	O(c)
+
+✅ Final Summary
+Module Component	Time Complexity	Space Complexity
+Top Delay Routes	O(r log r)	O(r)
+Baggage Jam Detection	O(j log j)	O(j)
+Flight Risk Detection	O(c)	O(c)
+Overall Module 7	O(r log r + j log j + c)	O(r + j + c)
+
+✅ Why It’s Efficient
+Uses hash maps for O(1) lookup
+
+Sorting only a few elements (r, j are small)
+
+No recomputation thanks to one-pass aggregation
+
+-=================
+Special use case - 2
+
+🚀 Algorithm Summary
+You're doing a DFS traversal over a directed flight graph (adjList), from a source to a destination, with constraints:
+
+Max hops ≤ 2
+
+Layover ≤ 180 mins
+
+Cost ≤ $1200
+
+Each path is:
+
+Tracked (path vector)
+
+Pruned (if cost or hops exceed limit)
+
+⏱ Time Complexity
+Let’s define:
+
+n: number of airports (vertices)
+
+e: number of routes (edges)
+
+k: max depth of DFS (≤ 2 hops → depth ≤ 3)
+
+b: average branching factor (edges per airport)
+
+🔍 Worst-case time complexity:
+Since we prune DFS aggressively, the actual complexity is much less than a full traversal.
+
+But worst-case (without pruning):
+
+scss
+Copy
+Edit
+O(b^k)
+For your case:
+
+k = 2 (max 2 hops → 3 nodes in path)
+
+So, worst-case DFS path expansion:
+
+scss
+Copy
+Edit
+O(b^3)
+And since we check each neighbor of curr, each level has at most b calls.
+
+✅ In practice:
+Because of cost + layover pruning, most branches terminate early
+
+So actual performance is close to linear or small exponential in constrained path space
+
+🧠 Space Complexity
+You're storing:
+
+path vector (max size 3 per recursion): O(k)
+
+results vector of valid paths: O(p * k) where p is number of valid routes
+
+memo (not used in constrained DFS): negligible here
+
+So overall:
+ini
+Copy
+Edit
+Space = O(p * k)
+In worst-case: p could be hundreds (you saw 100+ results)
+
+k = 3 (3-airport path max)
+
+✅ Final Summary
+Resource	Complexity	Explanation
+Time (worst)	O(b^k)	DFS with max depth 3 (due to 2-hop limit)
+Time (practical)	O(valid paths)	Heavily pruned using cost/layover limits
+Space	O(p * k)	p = valid routes, k ≤ 3 per path
