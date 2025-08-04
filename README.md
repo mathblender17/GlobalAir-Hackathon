@@ -84,8 +84,8 @@ g++ -std=c++11 main_route_opt.cpp graph.cpp -o output/main_route_opt.exe
 
 - [ design_doc.md](./design_doc.md) — contains architecture, complexity, trade-offs, and benchmarks.
 - CSV examples available under `/data/`.
-- [video link](https://www.youtube.com/watch?v=a_pO8Q3vz54)
-
+- [video link 1](https://youtu.be/a_pO8Q3vz54)
+- [video link - 2](https://www.youtube.com/watch?v=X-bQgG2l5zQ)
 ---
 
 ##  Author
