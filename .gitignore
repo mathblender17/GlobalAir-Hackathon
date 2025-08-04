@@ -1,0 +1,13 @@
+# === Compiled Binary Files ===
+*.exe
+*.out
+*.o
+
+# === Output Directory ===
+/src/output/*
+
+# Keep the output directory structure in repo
+!/src/output/.gitkeep
+
+# VSCode config (optional, if using workspace settings)
+.vscode/
